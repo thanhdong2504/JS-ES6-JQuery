@@ -1,0 +1,98 @@
+.slideshow-container {
+    max-width: 1000px;
+    margin: auto;
+    position: relative;
+}
+
+.slides {
+    display: none;
+}
+
+.slides img {
+    width: 100%;
+}
+
+.button-container {
+    border-radius: 50%;
+    background-color: rgba(211, 200, 200, 0.8);
+    position: absolute;
+    top: 50%;
+    cursor: pointer;
+    width: auto;
+    padding: 10px 16px;
+    font-weight: bold;
+    user-select: none;
+}
+
+.button-container a {
+    color: gray;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.button-container:hover {
+    background-color: gray;
+}
+
+.button-container:hover a {
+    color: #fff;
+}
+
+.button-container.right {
+    right: 0;
+}
+
+.caption-text {
+    background-color: rgba(80, 80, 80, 0.75);
+    color: #fff;
+    padding: 8px 0;
+    position: absolute;
+    width: 100%;
+    bottom: 8px;
+}
+
+.number-text {
+    color: #fff;
+    position: absolute;
+    top: 0;
+    font-size: 12px;
+    padding: 8px 12px;
+}
+
+.dot-container {
+    text-align: center;
+    margin-top: 5px;
+}
+
+.dots {
+    cursor: pointer;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin: 0 2px;
+    border-radius: 50%;
+    background-color: gray;
+    transition: background_color 0.6s ease;
+}
+
+.active,
+.dot:hover {
+    background-color: black;
+}
+
+/* Animation */
+
+.fade {
+    animation-name: fade;
+    animation-duration: 0.5s;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0.2;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

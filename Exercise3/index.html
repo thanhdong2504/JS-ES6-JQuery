@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="./styles.css" />
+    </head>
+    <body>
+        <h2>Data table with full features</h2>
+        <div class="feature-part">
+            <!-- Show entities -->
+            <div class="entities-part">
+                <p>Show</p>
+                <select id="itemsPerPageSelect">
+                    <option selected>10</option>
+                    <option>25</option>
+                    <option>50</option>
+                    <option>100</option>
+                </select>
+                <p>entities</p>
+            </div>
+
+            <!-- Search box -->
+            <div class="search-part">
+                <span>Search</span>
+                <input type="text" id="search-box" />
+            </div>
+        </div>
+        <table id="wholeTable">
+            <thead>
+                <tr>
+                    <th>
+                        Rendering engine <span class="sort-icon"><img src="./assets/sort.svg" alt="sort" /></span>
+                    </th>
+                    <th>
+                        Browser <span class="sort-icon"><img src="./assets/sort.svg" alt="sort" /></span>
+                    </th>
+                    <th>
+                        Platform(s) <span class="sort-icon"><img src="./assets/sort.svg" alt="sort" /></span>
+                    </th>
+                    <th>
+                        Engine version <span class="sort-icon"><img src="./assets/sort.svg" alt="sort" /></span>
+                    </th>
+                    <th>
+                        CSS Grade <span class="sort-icon"><img src="./assets/sort.svg" alt="sort" /></span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+
+        <div class="bottom-container">
+            <!-- Description part -->
+            <div>
+                <p>Showing <span id="startIndex"></span> to <span id="endIndex"></span> of <span id="totalEntities"></span> entities</p>
+            </div>
+
+            <!-- Pagination part -->
+            <div class="pagination" id="pagination">
+                <button type="button" id="prev">Previous</button>
+                <!-- Dynamic links based on the number of entity -->
+                <button type="button" id="next">Next</button>
+                <p id="page-numbers"></p>
+            </div>
+        </div>
+
+        <script type="module" src="./index.js"></script>
+    </body>
+</html>

@@ -1,0 +1,109 @@
+.container {
+    padding: 20px 0;
+    background-color: #4e443c;
+}
+
+.image-container {
+    max-width: 800px;
+    margin: auto;
+    position: relative;
+    border: 5px solid #fff;
+}
+
+.slides {
+    display: none;
+}
+
+.slides img {
+    width: 100%;
+}
+
+.button-container {
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    cursor: pointer;
+    background-color: #4e443c;
+    width: auto;
+    padding: 10px 16px;
+    font-weight: bold;
+}
+
+.button-container.left {
+    left: 10px
+}
+
+.button-container.right {
+    right: 10px;
+}
+
+.button-container a {
+    color: #ffff;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.button-container:hover {
+    background-color: gray;
+}
+
+.caption-text {
+    color: rgba(255, 255, 255, 0.66);
+    padding: 8px 0;
+    text-align: right;
+    position: absolute;
+    width: 100%;
+    bottom: 3px;
+    right: 20px;
+}
+
+.dot-container {
+    position: absolute;
+    text-align: center;
+    bottom: 10px;
+    width: 100%;
+    margin: auto;
+}
+
+.dots {
+    cursor: pointer;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 0 2px;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: background_color 0.6s ease;
+}
+
+.active,
+.dot:hover {
+    background-color: black;
+}
+
+.name {
+    text-decoration: underline;
+}
+
+.name:hover {
+    cursor: pointer;
+    z-index: 100;
+}
+
+.fadein {
+    animation: fadein 0.5s;
+}
+
+@keyframes fadein {
+    from {
+        transform: translateX(1%);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+
+
