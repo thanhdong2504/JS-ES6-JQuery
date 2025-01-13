@@ -1,4 +1,4 @@
-.slideshow-container {
+#slideshow-container {
     max-width: 1000px;
     margin: auto;
     position: relative;
@@ -59,7 +59,7 @@
     padding: 8px 12px;
 }
 
-.dot-container {
+#dot-container {
     text-align: center;
     margin-top: 5px;
 }

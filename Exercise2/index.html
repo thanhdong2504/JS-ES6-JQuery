@@ -7,35 +7,15 @@
         <link rel="stylesheet" href="./styles2.css" />
     </head>
     <body>
-        <div class="container">
-            <div class="image-container">
-                <div class="slides fadein">
-                    <img src="./assets/img1.jpg" alt="Image 1" />
-                    <div class="caption-text">Photos by <span class="name">Marc Wiegelmann</span></div>
-                </div>
-                <div class="slides fadein">
-                    <img src="./assets/img2.jpg" alt="Image 2" />
-                    <div class="caption-text">Photos by <span>Marc Wiegelmann</span></div>
-                </div>
-                <div class="slides fadein">
-                    <img src="./assets/img3.jpg" alt="Image 3" />
-                    <div class="caption-text">Photos by <span>Marc Wiegelmann</span></div>
-                </div>
+        <section class="slider-wrapper">
+            <button class="slide-arrow" id="slide-arrow-prev">&#8249;</button>
+            <button class="slide-arrow" id="slide-arrow-next">&#8250;</button>
+            <!-- Generate images -->
+            <ul class="slides-container" id="slides-container"></ul>
 
-                <div onclick="changeSlide(-1)" class="button-container left">
-                    <a>&lt;</a>
-                </div>
-                <div onclick="changeSlide(+1)" class="button-container right">
-                    <a>&gt;</a>
-                </div>
-
-                <div class="dot-container">
-                    <span onclick="showCurrentSlide(1)" class="dots"></span>
-                    <span onclick="showCurrentSlide(2)" class="dots"></span>
-                    <span onclick="showCurrentSlide(3)" class="dots"></span>
-                </div>
-            </div>
-        </div>
-        <script src="./index2.js"></script>
+            <!-- Generate dots -->
+            <ul class="dots-container" id="dots-container"></ul>
+        </section>
+        <script src="./index.js"></script>
     </body>
 </html>

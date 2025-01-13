@@ -1,78 +1,92 @@
-.container {
-    padding: 20px 0;
-    background-color: #4e443c;
+* {
+    box-sizing: border-box;
 }
 
-.image-container {
-    max-width: 800px;
+body {
+    max-width: 1440px;
     margin: auto;
+}
+
+.slider-wrapper {
+    margin: 1rem;
     position: relative;
-    border: 5px solid #fff;
+    overflow: hidden;
 }
 
-.slides {
-    display: none;
-}
-
-.slides img {
+.slides-container {
+    height: calc(100vh - 2rem);
     width: 100%;
+    display: flex;
+    scroll-behavior: smooth;
+    overflow: hidden;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
-.button-container {
-    border-radius: 50%;
+.slide-arrow {
     position: absolute;
-    top: 50%;
-    cursor: pointer;
-    background-color: #4e443c;
-    width: auto;
-    padding: 10px 16px;
-    font-weight: bold;
-}
-
-.button-container.left {
-    left: 10px
-}
-
-.button-container.right {
-    right: 10px;
-}
-
-.button-container a {
-    color: #ffff;
-    font-weight: bold;
-    font-size: 20px;
-}
-
-.button-container:hover {
-    background-color: gray;
-}
-
-.caption-text {
-    color: rgba(255, 255, 255, 0.66);
-    padding: 8px 0;
-    text-align: right;
-    position: absolute;
-    width: 100%;
-    bottom: 3px;
-    right: 20px;
-}
-
-.dot-container {
-    position: absolute;
-    text-align: center;
-    bottom: 10px;
-    width: 100%;
+    display: flex;
+    top: 0;
+    bottom: 0;
     margin: auto;
+    height: 4rem;
+    background-color: white;
+    border: none;
+    width: 2rem;
+    font-size: 3rem;
+    padding: 0;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 100ms;
 }
 
-.dots {
+.slide-arrow:hover,
+.slide-arrow:focus {
+    opacity: 1;
+}
+
+#slide-arrow-prev {
+    left: 0;
+    padding-left: 0.25rem;
+    border-radius: 0 2rem 2rem 0;
+}
+
+#slide-arrow-next {
+    right: 0;
+    padding-left: 0.75rem;
+    border-radius: 2rem 0 0 2rem;
+}
+
+.slide {
+    width: 100%;
+    height: 100%;
+    flex: 1 0 100%;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.dots-container {
+    position: absolute;
+    top: 76%;
+    left: 49%;
+    right: auto;
+    transform: translateX(-50%);
+    display: flex;
+}
+
+.dot {
     cursor: pointer;
     display: inline-block;
-    width: 10px;
-    height: 10px;
+    width: 0.8rem;
+    height: 0.8rem;
     margin: 0 2px;
     border-radius: 50%;
-    background-color: #fff;
+    background-color: gray;
     transition: background_color 0.6s ease;
 }
 
@@ -80,30 +94,3 @@
 .dot:hover {
     background-color: black;
 }
-
-.name {
-    text-decoration: underline;
-}
-
-.name:hover {
-    cursor: pointer;
-    z-index: 100;
-}
-
-.fadein {
-    animation: fadein 0.5s;
-}
-
-@keyframes fadein {
-    from {
-        transform: translateX(1%);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-
-
