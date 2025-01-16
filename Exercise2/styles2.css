@@ -92,7 +92,7 @@ button:hover {
 
 .dot.active {
     background-color: #fff;
-    transform: scale(1.2);
+    transform: scale(1.4);
 }
 
 /* Add gradient overlay */
@@ -115,15 +115,6 @@ button:hover {
     }
 }
 
-@keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-    }
-    to {
-        transform: translateX(0);
-    }
-}
-
 @keyframes slideOutRight {
     from {
         transform: translateX(0);
@@ -136,6 +127,15 @@ button:hover {
 @keyframes slideInLeft {
     from {
         transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
     }
     to {
         transform: translateX(0);

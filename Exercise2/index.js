@@ -1,4 +1,5 @@
 const images = ["img1.jpg", "img2.jpg", "img3.jpg"];
+const urlImages = "https://placehold.co/600x400?text=";
 const slides = document.querySelector(".slides");
 const dots = document.querySelector(".dots");
 let slideIndex = 0;
@@ -9,25 +10,23 @@ const nextBtn = document.querySelector("#next");
 document.addEventListener("DOMContentLoaded", () => {
     generateImagesAndDots();
     setEventListeners();
+
+    // Automatically change slides
+    setInterval(() => {
+        showSlide(slideIndex + 1, true);
+    }, 5000);
 });
 
 const generateImagesAndDots = () => {
     images.forEach((img, index) => {
-        const slide = document.createElement("div");
-        slide.classList.add("slide");
-        index === slideIndex && slide.classList.add("active");
-        slide.setAttribute("data-slide", index);
-        if (slideIndex !== index) slide.style.display = "none";
-        slide.innerHTML = `
-            <img src="./assets/${img}" alt="Image ${index}"/>
+        // Generate slides
+        slides.innerHTML += `
+            <div class="slide ${index === 0 ? "active" : ""}" data-slide="${index}" style="display: ${index === 0 ? "block" : "none"}">
+                <img src="${urlImages + img}" alt="Image ${index}"/>
+            </div>
         `;
-
-        slides.appendChild(slide);
-
-        const dot = document.createElement("span");
-        dot.classList.add("dot");
-        index === 0 && dot.classList.add("active");
-        dots.appendChild(dot);
+        // Generate dots
+        dots.innerHTML += `<span class="dot${index === 0 ? " active" : ""}"></span>`;
     });
 };
 
@@ -50,16 +49,9 @@ const setEventListeners = () => {
 };
 
 const validateIndex = (index, totalLength) => {
-    let newIndex;
-    if (index >= totalSlides) {
-        newIndex = 0;
-    } else if (index < 0) {
-        newIndex = totalLength - 1;
-    } else {
-        newIndex = index;
-    }
-
-    return newIndex;
+    if (index >= totalSlides) return 0;
+    else if (index < 0) return totalLength - 1;
+    return index;
 };
 
 const showSlide = (index, isMovingRight) => {
@@ -69,8 +61,10 @@ const showSlide = (index, isMovingRight) => {
     // Update slideIndex
     slideIndex = validateIndex(index, totalSlides);
 
-    // Get current and next slides
+    // Get current slides
     const currentSlide = slides[oldIndex];
+
+    // Get next slides
     const nextSlide = slides[slideIndex];
 
     // Reset any existing animations
@@ -101,27 +95,13 @@ const showSlide = (index, isMovingRight) => {
 };
 
 const goToSlide = (index) => {
-    // Get the value of current index
-    let currentSlideIndex = slideIndex;
+    const newSlideIndex = validateIndex(index, totalSlides);
+    const isMovingRight = slideIndex < newSlideIndex;
+    const step = isMovingRight ? 1 : -1;
 
-    // Validate index
-    let newSlideIndex = validateIndex(index, totalSlides);
-
-    let isMovingRight = currentSlideIndex < newSlideIndex && currentSlideIndex < index;
-
-    const delay = 50;
-
-    if (isMovingRight) {
-        for (let i = currentSlideIndex; i < newSlideIndex; i++) {
-            setTimeout(() => {
-                showSlide(i + 1, isMovingRight);
-            }, delay * (i - currentSlideIndex));
-        }
-    } else {
-        for (let i = currentSlideIndex; i > newSlideIndex; i--) {
-            setTimeout(() => {
-                showSlide(i - 1, isMovingRight);
-            }, delay * (currentSlideIndex - i));
-        }
+    for (let i = slideIndex; i !== newSlideIndex; i += step) {
+        setTimeout(() => {
+            showSlide(i + step, isMovingRight);
+        }, 50 * Math.abs(i - slideIndex));
     }
 };
