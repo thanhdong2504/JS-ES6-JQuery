@@ -12,9 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setEventListeners();
 
     // Automatically change slides
-    setInterval(() => {
-        showSlide(slideIndex + 1, true);
-    }, 5000);
+    setInterval(() => showSlide(slideIndex + 1, true), 5000);
 });
 
 const generateImagesAndDots = () => {
@@ -31,20 +29,10 @@ const generateImagesAndDots = () => {
 };
 
 const setEventListeners = () => {
-    nextBtn.addEventListener("click", () => {
-        showSlide(slideIndex + 1, true);
-    });
-
-    prevBtn.addEventListener("click", () => {
-        showSlide(slideIndex - 1, false);
-    });
-
-    // Update dot click handlers
-    const dotElements = document.querySelectorAll(".dot");
-    dotElements.forEach((dot, index) => {
-        dot.addEventListener("click", () => {
-            goToSlide(index);
-        });
+    nextBtn.addEventListener("click", () => showSlide(slideIndex + 1, true));
+    prevBtn.addEventListener("click", () => showSlide(slideIndex - 1, false));
+    document.querySelectorAll(".dot").forEach((dot, index) => {
+        dot.addEventListener("click", () => goToSlide(index));
     });
 };
 
@@ -57,36 +45,24 @@ const validateIndex = (index, totalLength) => {
 const showSlide = (index, isMovingRight) => {
     const slides = document.querySelectorAll(".slide");
     const oldIndex = slideIndex;
-
     // Update slideIndex
     slideIndex = validateIndex(index, totalSlides);
-
     // Get current slides
     const currentSlide = slides[oldIndex];
-
     // Get next slides
     const nextSlide = slides[slideIndex];
-
     // Reset any existing animations
     slides.forEach((slide) => {
         slide.style.animation = "";
         slide.style.zIndex = "0";
     });
-
     // Set up the slides
     currentSlide.style.zIndex = "1";
     nextSlide.style.zIndex = "2";
     nextSlide.style.display = "block";
-
     // Apply animations
-    if (isMovingRight) {
-        currentSlide.style.animation = "slideOutLeft 0.5s ease forwards";
-        nextSlide.style.animation = "slideInRight 0.5s ease forwards";
-    } else {
-        currentSlide.style.animation = "slideOutRight 0.5s ease forwards";
-        nextSlide.style.animation = "slideInLeft 0.5s ease forwards";
-    }
-
+    currentSlide.style.animation = (isMovingRight ? "slideOutLeft" : "slideOutRight") + " 0.5s ease forwards";
+    nextSlide.style.animation = (isMovingRight ? "slideInRight" : "slideInLeft") + " 0.5s ease forwards";
     // Update dots
     const dotElements = document.querySelectorAll(".dot");
     dotElements.forEach((dot, idx) => {
@@ -96,12 +72,7 @@ const showSlide = (index, isMovingRight) => {
 
 const goToSlide = (index) => {
     const newSlideIndex = validateIndex(index, totalSlides);
-    const isMovingRight = slideIndex < newSlideIndex;
-    const step = isMovingRight ? 1 : -1;
+    const step = slideIndex < newSlideIndex ? 1 : -1;
 
-    for (let i = slideIndex; i !== newSlideIndex; i += step) {
-        setTimeout(() => {
-            showSlide(i + step, isMovingRight);
-        }, 50 * Math.abs(i - slideIndex));
-    }
+    for (let i = slideIndex; i !== newSlideIndex; i += step) setTimeout(() => showSlide(i + step, slideIndex < newSlideIndex), 50 * Math.abs(i - slideIndex));
 };
