@@ -37,24 +37,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 const generateHeading = () => {
-    const tableRow = document.createElement("tr");
-    tableHeading.appendChild(tableRow);
-    Object.keys(sortState).forEach((heading) => {
-        const tableHeadingData = document.createElement("th");
-        tableHeadingData.innerHTML = `
-            ${heading} <span class="sort-icon"><img src="./assets/sort.svg" alt="sort" /></span>
-        `;
-        tableRow.appendChild(tableHeadingData);
-    });
+    tableHeading.innerHTML = `<tr>${Object.keys(sortState)
+        .map((heading) => `<th>${heading} <span class="sort-icon"><img src="./assets/sort.svg" alt="sort" /></span></th>`)
+        .join("")}</tr>`;
 };
 
 const generateOptions = () => {
-    options.forEach((option, index) => {
-        const optionTag = document.createElement("option");
-        if (index === 0) optionTag.setAttribute("selected", true);
-        optionTag.innerHTML = `${option}`;
-        itemsPerPageSelect.appendChild(optionTag);
-    });
+    itemsPerPageSelect.innerHTML = options.map((option, index) => `<option ${index === 0 ? "selected" : ""}>${option}</option>`).join(" ");
 };
 
 const createPagination = () => {
@@ -104,19 +93,19 @@ const displayPage = (page) => {
     document.getElementById("endIndex").textContent = endIndex;
     document.getElementById("totalEntities").textContent = filteredData.length;
 
-    tableBody.innerHTML = "";
-
-    filteredData.slice(startIndex, endIndex).forEach((data, index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-        <td>${data.renderingEngine}</td>
-        <td>${data.browser}</td>
-        <td>${data.platforms}</td>
-        <td>${data.engineVersion}</td>
-        <td>${data.cssGrade}</td>`;
-
-        tableBody.appendChild(row);
-    });
+    tableBody.innerHTML = filteredData
+        .slice(startIndex, endIndex)
+        .map(
+            (data) => `
+        <tr>
+            <td>${data.renderingEngine}</td>
+            <td>${data.browser}</td>
+            <td>${data.platforms}</td>
+            <td>${data.engineVersion}</td>
+            <td>${data.cssGrade}</td>
+        </tr>`
+        )
+        .join("");
 };
 
 // Set event listener for sort icons
@@ -140,26 +129,18 @@ const setEventForSortIcons = () => {
                 // Update all icons
                 const columnIndex = columns.indexOf(state);
                 const columnIcon = sortIcons[columnIndex].querySelector("img");
-                if (sortState[state] === "none") {
-                    columnIcon.src = "./assets/sort.svg";
-                } else if (sortState[state] === "asc") {
-                    columnIcon.src = "./assets/sort-up.svg";
-                } else {
-                    columnIcon.src = "./assets/sort-down.svg";
-                }
+                if (sortState[state] === "none") columnIcon.src = "./assets/sort.svg";
+                else if (sortState[state] === "asc") columnIcon.src = "./assets/sort-up.svg";
+                else columnIcon.src = "./assets/sort-down.svg";
             }
 
             // Sort data
             filteredData.sort((a, b) => {
                 if (sortState[columnKey] === "asc") {
-                    if (!isNaN(a[columnKey])) {
-                        return parseInt(a[columnKey]) - parseInt(b[columnKey]);
-                    }
+                    if (!isNaN(a[columnKey])) return parseInt(a[columnKey]) - parseInt(b[columnKey]);
                     return a[columnKey].localeCompare(b[columnKey]);
                 } else {
-                    if (!isNaN(a[columnKey])) {
-                        return parseInt(b[columnKey]) - parseInt(a[columnKey]);
-                    }
+                    if (!isNaN(a[columnKey])) return parseInt(b[columnKey]) - parseInt(a[columnKey]);
                     return b[columnKey].localeCompare(a[columnKey]);
                 }
             });
@@ -184,20 +165,12 @@ const searchFunction = (e) => {
 
 // Set event listener for "Previous" button
 prevButton.addEventListener("click", () => {
-    if (currentPage > 1) {
-        currentPage--;
-        displayPage(currentPage);
-        createPagination();
-    }
+    if (currentPage > 1) displayPage(--currentPage), createPagination();
 });
 
 // Set event listener for "Next" button
 nextButton.addEventListener("click", () => {
-    if (currentPage < totalPages) {
-        currentPage++;
-        displayPage(currentPage);
-        createPagination();
-    }
+    if (currentPage < totalPages) displayPage(++currentPage), createPagination();
 });
 
 // Set event listener for select entity button
