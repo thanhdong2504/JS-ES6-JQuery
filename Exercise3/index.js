@@ -1,183 +1,98 @@
 import browserData from "./data.js";
 
-const pagination = document.getElementById("pagination");
-const prevButton = document.getElementById("prev");
-const nextButton = document.getElementById("next");
-const pageNumbers = document.getElementById("page-numbers");
-const tableHeading = document.getElementById("tableHeading");
-const tableBody = document.getElementById("tableBody");
-const itemsPerPageSelect = document.getElementById("itemsPerPageSelect");
-const searchBox = document.getElementById("search-box");
-const sortState = {
-    renderingEngine: "none",
-    browser: "none",
-    platforms: "none",
-    engineVersion: "none",
-    cssGrade: "none",
-};
-
+const pagination = document.getElementById("pagination"),
+    prevButton = document.getElementById("prev"),
+    nextButton = document.getElementById("next"),
+    pageNumbers = document.getElementById("page-numbers"),
+    tableHeading = document.getElementById("tableHeading"),
+    tableBody = document.getElementById("tableBody"),
+    itemsPerPageSelect = document.getElementById("itemsPerPageSelect"),
+    searchBox = document.getElementById("search-box"),
+    totalEntities = document.getElementById("totalEntities"),
+    startIndex = document.getElementById("startIndex"),
+    endIndex = document.getElementById("endIndex");
+const sortState = Object.fromEntries(Object.keys(browserData[0]).map((key) => [key, "none"]));
 const options = [10, 25, 50, 100];
-
-let pageLinks = document.getElementsByClassName("page-link");
-let itemsPerPage = 10; // default value
-let currentPage = 1;
-let totalPages = Math.ceil(browserData.length / itemsPerPage);
-let filteredData = [...browserData];
-
-document.addEventListener("DOMContentLoaded", () => {
-    generateHeading();
-    generateOptions();
-    setEventForSortIcons();
-    displayPage(currentPage);
-    createPagination();
-
-    document.getElementById("totalEntities").textContent = filteredData.length;
-
-    searchBox.addEventListener("keyup", searchFunction);
-});
-
-const generateHeading = () => {
-    tableHeading.innerHTML = `<tr>${Object.keys(sortState)
-        .map((heading) => `<th>${heading} <span class="sort-icon"><img src="./assets/sort.svg" alt="sort" /></span></th>`)
-        .join("")}</tr>`;
-};
-
-const generateOptions = () => {
-    itemsPerPageSelect.innerHTML = options.map((option, index) => `<option ${index === 0 ? "selected" : ""}>${option}</option>`).join(" ");
-};
+let itemsPerPage = 10,
+    currentPage = 1,
+    filteredData = [...browserData],
+    totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
 const createPagination = () => {
-    pagination.innerHTML = "";
-    pagination.appendChild(prevButton);
-    for (let i = 0; i < totalPages; i++) {
-        const links = document.createElement("a");
-        links.setAttribute("href", "#");
-        links.setAttribute("data-page", i + 1);
-        links.classList.add("page-link");
-        links.textContent = `${i + 1}`;
-
-        links.addEventListener("click", (e) => {
-            e.preventDefault();
-            currentPage = parseInt(e.target.getAttribute("data-page"));
-            displayPage(currentPage);
-            createPagination();
-        });
-
-        pagination.appendChild(links);
-    }
-    pagination.appendChild(nextButton);
-
-    // Update page numbers
-    pageNumbers.textContent = `Page ${currentPage} of ${totalPages}`;
-
-    // Update pagination buttons
-    prevButton.classList.remove("disabled");
-    nextButton.classList.remove("disabled");
-    if (currentPage === 1) prevButton.classList.add("disabled");
-    if (currentPage === totalPages) nextButton.classList.add("disabled");
-
-    pageLinks = document.getElementsByClassName("page-link");
-    // Update active page
-    Array.from(pageLinks).forEach((link) => {
-        const linkPage = parseInt(link.getAttribute("data-page"));
-        link.classList.toggle("active", linkPage === currentPage);
-    });
+    pagination.innerHTML = `<button id="prev" class="${currentPage === 1 ? "disabled" : ""}">Previous</button>` + Array.from({ length: totalPages }, (element, i) => `<a href="#" data-page="${i + 1}" class="page-link${i + 1 === currentPage ? " active" : ""}">${i + 1}</a>`).join("") + `<button id="next" class="${currentPage === totalPages ? "disabled" : ""}">Next</button>`;
 };
 
-// Display items for a specific page
 const displayPage = (page) => {
-    const startIndex = (page - 1) * itemsPerPage;
-    const endIndex = Math.min(startIndex + itemsPerPage, filteredData.length);
-
-    document.getElementById("startIndex").textContent = startIndex + 1;
-    document.getElementById("endIndex").textContent = endIndex;
-    document.getElementById("totalEntities").textContent = filteredData.length;
-
+    const start = (page - 1) * itemsPerPage,
+        end = Math.min(start + itemsPerPage, filteredData.length);
+    startIndex.textContent = start + 1;
+    endIndex.textContent = end;
+    totalEntities.textContent = filteredData.length;
     tableBody.innerHTML = filteredData
-        .slice(startIndex, endIndex)
+        .slice(start, end)
         .map(
-            (data) => `
-        <tr>
-            <td>${data.renderingEngine}</td>
-            <td>${data.browser}</td>
-            <td>${data.platforms}</td>
-            <td>${data.engineVersion}</td>
-            <td>${data.cssGrade}</td>
-        </tr>`
+            (data) =>
+                `<tr>${Object.values(data)
+                    .map((val) => `<td>${val}</td>`)
+                    .join("")}</tr>`
         )
         .join("");
 };
 
-// Set event listener for sort icons
-const setEventForSortIcons = () => {
-    let sortIcons = document.getElementsByClassName("sort-icon");
-    Array.from(sortIcons).forEach((icon, index) => {
-        icon.addEventListener("click", () => {
-            const columns = Object.keys(sortState);
-            const columnKey = columns[index];
-
-            // Reset all sort states and icons first
-            for (let state in sortState) {
-                if (state === columnKey) {
-                    // Toggle sort state for clicked column
-                    sortState[state] = sortState[state] === "asc" ? "desc" : "asc";
-                } else {
-                    // Reset other columns
-                    sortState[state] = "none";
-                }
-
-                // Update all icons
-                const columnIndex = columns.indexOf(state);
-                const columnIcon = sortIcons[columnIndex].querySelector("img");
-                if (sortState[state] === "none") columnIcon.src = "./assets/sort.svg";
-                else if (sortState[state] === "asc") columnIcon.src = "./assets/sort-up.svg";
-                else columnIcon.src = "./assets/sort-down.svg";
-            }
-
-            // Sort data
-            filteredData.sort((a, b) => {
-                if (sortState[columnKey] === "asc") {
-                    if (!isNaN(a[columnKey])) return parseInt(a[columnKey]) - parseInt(b[columnKey]);
-                    return a[columnKey].localeCompare(b[columnKey]);
-                } else {
-                    if (!isNaN(a[columnKey])) return parseInt(b[columnKey]) - parseInt(a[columnKey]);
-                    return b[columnKey].localeCompare(a[columnKey]);
-                }
-            });
-
-            // Redisplay currentPage
-            displayPage(currentPage);
-        });
-    });
+const handleSort = (key, element) => {
+    const state = (sortState[key] = sortState[key] === "asc" ? "desc" : "asc");
+    element.querySelector("img").src = `./assets/sort-${state === "asc" ? "up" : "down"}.svg`;
+    filteredData.sort((a, b) => (state === "asc" ? a[key].localeCompare(b[key]) : b[key].localeCompare(a[key])));
+    displayPage(currentPage);
 };
 
-const searchFunction = (e) => {
-    let keywordToSearch = e.target.value.toUpperCase();
+const generateTableHeading = () => {
+    tableHeading.innerHTML = `<tr>${Object.keys(sortState)
+        .map((key) => `<th>${key} <span class="sort-icon" data-key="${key}"><img src="./assets/sort.svg" alt="sort"></span></th>`)
+        .join("")}</tr>`;
+};
+
+const handleSearch = (keyword) => {
+    let keywordToSearch = keyword.toUpperCase();
     filteredData = browserData.filter((data) => {
         return data.renderingEngine.toUpperCase().includes(keywordToSearch) || data.browser.toUpperCase().includes(keywordToSearch) || data.cssGrade.toUpperCase().includes(keywordToSearch) || data.engineVersion.toUpperCase().includes(keywordToSearch);
     });
-
     totalPages = Math.ceil(filteredData.length / itemsPerPage);
     currentPage = 1;
     displayPage(currentPage);
     createPagination();
 };
 
-// Set event listener for "Previous" button
-prevButton.addEventListener("click", () => {
-    if (currentPage > 1) displayPage(--currentPage), createPagination();
-});
-
-// Set event listener for "Next" button
-nextButton.addEventListener("click", () => {
-    if (currentPage < totalPages) displayPage(++currentPage), createPagination();
-});
-
-// Set event listener for select entity button
-itemsPerPageSelect.addEventListener("change", (e) => {
-    itemsPerPage = parseInt(e.target.value);
-    totalPages = Math.ceil(browserData.length / itemsPerPage);
-    currentPage = 1;
+document.addEventListener("DOMContentLoaded", () => {
+    generateTableHeading();
+    itemsPerPageSelect.innerHTML = options.map((option) => `<option>${option}</option>`).join("");
     displayPage(currentPage);
     createPagination();
+
+    searchBox.addEventListener("input", (e) => handleSearch(e.target.value));
+    itemsPerPageSelect.addEventListener("change", (e) => {
+        itemsPerPage = parseInt(e.target.value);
+        totalPages = Math.ceil(filteredData.length / itemsPerPage);
+        displayPage((currentPage = 1));
+        createPagination();
+    });
+
+    pagination.addEventListener("click", (e) => {
+        console.log(e.target.tagName);
+        if (e.target.tagName === "A") {
+            displayPage((currentPage = parseInt(e.target.dataset.page)));
+            createPagination();
+        } else if (e.target.id === "prev" && currentPage > 1) {
+            displayPage(--currentPage);
+            createPagination();
+        } else if (e.target.id === "next" && currentPage < totalPages) {
+            displayPage(++currentPage);
+            createPagination();
+        }
+    });
+
+    tableHeading.addEventListener("click", (e) => {
+        // Find the anchestors of current event.target element that has .sort-icon class
+        if (e.target.closest(".sort-icon")) handleSort(e.target.closest(".sort-icon").dataset.key, e.target.closest(".sort-icon"));
+    });
 });
